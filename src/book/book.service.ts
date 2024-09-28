@@ -41,20 +41,22 @@ export class BookService {
   async findAll(query: GetBooksQueryDto) {
     const result = await this.findByFilters(query);
 
-    if (!result) return 'Results not found';
+    if (!result) return 'Books not found';
 
     return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  async findOne(id: string) {
+    const result = await this.bookRepository.findOneBy({ id });
+
+    return result ? result : 'Book not found';
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
+  update(id: string, updateBookDto: UpdateBookDto) {
     return `This action updates a #${id} book`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} book`;
   }
 
