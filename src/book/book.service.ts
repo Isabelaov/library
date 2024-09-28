@@ -52,8 +52,24 @@ export class BookService {
     return result ? result : 'Book not found';
   }
 
-  update(id: string, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: string, dto: UpdateBookDto) {
+    const { authors, genres } = dto;
+    const book = await this.bookRepository.findOneBy({ id });
+
+    if (!book) throw new NotFoundException('Book not found');
+
+    if (authors) {
+      book.authors = await this.findByIds(authors, this.authorRepository);
+    }
+
+    if (genres) {
+      book.genres = await this.findByIds(genres, this.genreRepository);
+    }
+
+    Object.assign(book, dto);
+    await this.bookRepository.save(book);
+
+    return book;
   }
 
   remove(id: string) {
