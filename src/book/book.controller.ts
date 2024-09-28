@@ -37,6 +37,7 @@ export class BookController {
     return this.bookService.findOne(id);
   }
 
+  @ApiOperation({ summary: 'Update book' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(id, updateBookDto);
