@@ -15,11 +15,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status =
       exception instanceof HttpException ? exception.getStatus() : 500;
 
-    console.log(status);
-
     response.status(status).json({
-      statusCode: status,
-      message: exception.message || 'Internal server error :(',
+      response: exception.getResponse(),
       timestamp: new Date().toISOString(),
       path: request.url,
     });
