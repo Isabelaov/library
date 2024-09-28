@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinTable,
@@ -16,14 +18,26 @@ export class Book {
   @Column({ type: 'varchar', length: '200' })
   title: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', name: 'publication_date' })
   publicationDate: Date;
 
-  @ManyToMany(() => Author, (author) => author.books, { cascade: true })
+  @ManyToMany(() => Author, (author) => author.books, {
+    cascade: true,
+    eager: true,
+  })
   @JoinTable({ name: 'books_authors' })
   authors: Author[];
 
-  @ManyToMany(() => Genre, (genre) => genre.books, { cascade: true })
+  @ManyToMany(() => Genre, (genre) => genre.books, {
+    cascade: true,
+    eager: true,
+  })
   @JoinTable({ name: 'books_genres' })
   genres: Genre[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  trimName() {
+    this.title = this.title.trim().toLocaleLowerCase();
+  }
 }
