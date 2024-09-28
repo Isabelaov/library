@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Genre } from './entities/genre.entity';
 import { CreateGenreDto } from './dto/create-genre.dto';
-import { UpdateGenreDto } from './dto/update-genre.dto';
 
 @Injectable()
 export class GenreService {
-  create(createGenreDto: CreateGenreDto) {
-    return 'This action adds a new genre';
+  constructor(
+    @InjectRepository(Genre)
+    private readonly genreRepository: Repository<Genre>,
+  ) {}
+
+  async create(createGenreDto: CreateGenreDto) {
+    const { name } = createGenreDto;
+
+    await this.checkName(name);
+
+    const genre = this.genreRepository.create({ name });
+
+    return await this.genreRepository.save(genre);
   }
 
-  findAll() {
-    return `This action returns all genre`;
-  }
+  async checkName(name: string) {
+    const nameExists = await this.genreRepository.findOneBy({ name });
 
-  findOne(id: number) {
-    return `This action returns a #${id} genre`;
-  }
-
-  update(id: number, updateGenreDto: UpdateGenreDto) {
-    return `This action updates a #${id} genre`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} genre`;
+    if (nameExists) throw new BadRequestException('Name already exists');
   }
 }
