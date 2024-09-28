@@ -16,6 +16,9 @@ export class Book {
   @Column({ type: 'varchar', length: '200' })
   title: string;
 
+  @Column({ type: 'date' })
+  publicationDate: Date;
+
   @ManyToMany(() => Author, (author) => author.books, { cascade: true })
   @JoinTable({ name: 'books_authors' })
   authors: Author[];
