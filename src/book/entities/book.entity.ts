@@ -9,6 +9,8 @@ import {
 } from 'typeorm';
 import { Author } from 'src/author/entities/author.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
+import { Collection } from 'src/collection/entities/collection.entity';
+import { BookFormat } from '../enums/book-format.enum';
 
 @Entity('books')
 export class Book {
@@ -17,6 +19,18 @@ export class Book {
 
   @Column({ type: 'varchar', length: '200' })
   title: string;
+
+  @Column({ type: 'text' })
+  description: string;
+
+  @Column({ type: 'float' })
+  price: number;
+
+  @Column({ type: 'varchar', length: '200' })
+  cover: string;
+
+  @Column({ type: 'enum', enum: BookFormat })
+  type: BookFormat;
 
   @Column({ type: 'date', name: 'publication_date' })
   publicationDate: Date;
@@ -35,9 +49,13 @@ export class Book {
   @JoinTable({ name: 'books_genres' })
   genres: Genre[];
 
+  @ManyToMany(() => Collection, (collection) => collection.books)
+  @JoinTable({ name: 'books_collections' })
+  collections: Collection[];
+
   @BeforeInsert()
   @BeforeUpdate()
-  trimName() {
-    this.title = this.title.trim().toLocaleLowerCase();
+  formatName() {
+    this.title = this.title.trim().toLocaleUpperCase();
   }
 }

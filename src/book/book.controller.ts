@@ -11,7 +11,7 @@ import {
 import { BookService } from './book.service';
 import { CreateBookDto, GetBooksQueryDto, UpdateBookDto } from './dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetAllEvents } from './docs/book';
+import { GetAllBooks } from './docs/book';
 
 @ApiTags('Books')
 @Controller('books')
@@ -25,7 +25,7 @@ export class BookController {
     return this.bookService.create(createBookDto);
   }
 
-  @GetAllEvents()
+  @GetAllBooks()
   @Get()
   findAll(@Query() query: GetBooksQueryDto) {
     return this.bookService.findAll(query);

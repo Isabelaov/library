@@ -7,6 +7,10 @@ import { getDbConfig } from './common/config/db.config';
 import { BookModule } from './book/book.module';
 import { AuthorModule } from './author/author.module';
 import { GenreModule } from './genre/genre.module';
+import { PublishingHouseModule } from './publishing-house/publishing-house.module';
+import { UserModule } from './user/user.module';
+import { CollectionModule } from './collection/collection.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { GenreModule } from './genre/genre.module';
     BookModule,
     AuthorModule,
     GenreModule,
+    PublishingHouseModule,
+    UserModule,
+    CollectionModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

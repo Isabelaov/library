@@ -1,8 +1,11 @@
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Book } from 'src/book/entities/book.entity';
@@ -18,8 +21,17 @@ export class Genre {
   @ManyToMany(() => Book, (book) => book.genres)
   books?: Book[];
 
+  @OneToMany(() => Genre, (genre) => genre.subGenres)
+  genre: Genre[];
+
+  @ManyToOne(() => Genre, (genre) => genre.subGenres, {
+    nullable: true,
+  })
+  subGenres?: Genre[];
+
   @BeforeInsert()
-  trimName() {
-    this.name = this.name.trim().toLocaleLowerCase();
+  @BeforeUpdate()
+  formatName() {
+    this.name = this.name.trim().toLocaleUpperCase();
   }
 }

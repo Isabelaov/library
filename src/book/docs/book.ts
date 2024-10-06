@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 
-export function GetAllEvents() {
+export function GetAllBooks() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all books and apply filters' }),
     ApiQuery({

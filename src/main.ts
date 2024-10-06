@@ -9,7 +9,9 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const config = new DocumentBuilder()
     .setTitle('Library API')
+    .setDescription('API restful for a library')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   app.setGlobalPrefix('api');
