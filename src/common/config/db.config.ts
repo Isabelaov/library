@@ -13,7 +13,6 @@ export const getDbConfig = (
   entities: ['dist/*/.entity{.ts,.js}'],
   autoLoadEntities: true,
   synchronize: true,
-  dropSchema: true,
   ssl: {
     rejectUnauthorized: false,
   },

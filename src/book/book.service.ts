@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { CreateBookDto, UpdateBookDto, GetBooksQueryDto } from './dto';
 import { Book } from './entities/book.entity';
 import { Author } from 'src/author/entities/author.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
@@ -39,19 +38,25 @@ export class BookService {
     return await this.bookRepository.save(book);
   }
 
-  findAll() {
-    return `This action returns all book`;
+  async findAll(query: GetBooksQueryDto) {
+    const result = await this.findByFilters(query);
+
+    if (!result) return 'Books not found';
+
+    return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  async findOne(id: string) {
+    const result = await this.bookRepository.findOneBy({ id });
+
+    return result ? result : 'Book not found';
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
+  update(id: string, updateBookDto: UpdateBookDto) {
     return `This action updates a #${id} book`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} book`;
   }
 
@@ -59,5 +64,31 @@ export class BookService {
     return await repository.find({
       where: { id: In(ids) },
     });
+  }
+
+  private async findByFilters(query: GetBooksQueryDto) {
+    const { date, author, genre } = query;
+
+    let queryBuilder = this.bookRepository.createQueryBuilder('book');
+
+    if (date) {
+      queryBuilder = queryBuilder.where('book.publicationDate = :date', {
+        date,
+      });
+
+      if (author) {
+        queryBuilder = queryBuilder
+          .innerJoin('book.authors', 'author')
+          .andWhere('author.id = :author', { author });
+      }
+
+      if (genre) {
+        queryBuilder = queryBuilder
+          .innerJoin('book.genres', 'genre')
+          .andWhere('genre.id = : genre', { genre });
+      }
+    }
+
+    return await queryBuilder.getMany();
   }
 }
